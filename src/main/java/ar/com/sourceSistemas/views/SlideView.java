@@ -7,6 +7,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -25,6 +28,7 @@ public class SlideView extends JFrame {
 	File[] list;
 	int width = 0;
 	int height = 0;
+	List<Integer> alreadyTaken = new LinkedList<Integer>();
 
 	public SlideView() {
 		super("Java SlideShow");
@@ -36,7 +40,6 @@ public class SlideView extends JFrame {
 		File file = jfc.getSelectedFile();
 		list = file.listFiles();
 		init();
-
 	}
 
 	public void init() {
@@ -47,13 +50,13 @@ public class SlideView extends JFrame {
 		pic.setBounds(40, 30, width, height);
 
 		// Call The Function SetImageSize
-		SetImageSize(6);
+		SetImageSize();
 
 		// set a timer
 		tm = new Timer(time, new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				SetImageSize(x);
+				SetImageSize();
 				x += 1;
 				if (x >= list.length)
 					x = 0;
@@ -71,14 +74,37 @@ public class SlideView extends JFrame {
 	}
 
 	// create a function to resize the image
-	public void SetImageSize(int i) {
-		ImageIcon icon = new ImageIcon(list[i].toString());
+	public void SetImageSize() {
+		int randomNumber = random(list.length);
+		ImageIcon icon = new ImageIcon(list[randomNumber].toString());
 		Image img = icon.getImage();
-		// Image newImg = img.getScaledInstance(pic.getWidth(), pic.getHeight(),
-		// Image.SCALE_SMOOTH);
 		Image newImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		ImageIcon newImc = new ImageIcon(newImg);
 		pic.setIcon(newImc);
+	}
+
+	public int random(int max) {
+		boolean noValid = true;
+		int result = 0;
+		while (noValid) {
+			Random r = new Random();
+			int low = 0;
+
+			result = r.nextInt(max - low) + low;
+			if (!alreadyTaken.contains(result)) {
+				alreadyTaken.add(result);
+				noValid = false;
+			} else {
+
+				if (alreadyTaken.size() == list.length)
+					alreadyTaken.clear();
+				// System.exit(0);
+
+			}
+
+		}
+		return result;
+
 	}
 
 }

@@ -9,19 +9,18 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.Timer;
+import javax.swing.*;
 
 public class SlideView extends JFrame {
+
+
+
 
     JLabel pic;
     Timer tm;
@@ -34,6 +33,7 @@ public class SlideView extends JFrame {
     int picwidth = 0;
     int picheight = 0;
     List<Integer> alreadyTaken = new LinkedList<Integer>();
+    boolean random;
 
     public SlideView() {
         super("Java SlideShow");
@@ -46,15 +46,16 @@ public class SlideView extends JFrame {
         jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         jfc.showOpenDialog(null);
-        String timer = JOptionPane.showInputDialog(null, "cuanto tiempo duran ? ","4500");
-        time = Integer.valueOf(timer);
         File file = jfc.getSelectedFile();
         list = file.listFiles();
-        try {
-            init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //String timer = JOptionPane.showInputDialog(null, "cuanto tiempo duran ? ","4500");
+        new TimeAndRandomView(this);
+//        time = Integer.valueOf(timer);
+//        try {
+//            init();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void init() throws IOException {
@@ -97,7 +98,14 @@ public class SlideView extends JFrame {
 
     // create a function to resize the image
     public void SetImageSize() throws IOException {
-        int randomNumber = random(list.length);
+        int randomNumber =0;
+        if (random) {
+            randomNumber = random(list.length);
+        }else {
+            randomNumber = nonRandom(list.length);
+            System.out.println("cont: "+cont);
+            System.out.println("list.get: "+list[cont]);
+        }
         BufferedImage buffImg = ImageIO.read(new File(list[randomNumber].toString()));
         Integer[] arr = reduceImage(buffImg);
         picwidth = arr[1];
@@ -144,6 +152,19 @@ public class SlideView extends JFrame {
 
         }
         return result;
+
+    }
+    int cont = -1;
+    int nonRandom(int max){
+        Arrays.sort(list);
+        if(cont < max-1){
+            cont++;
+            return cont;
+        }else{
+            cont = 0;
+            return cont;
+        }
+
 
     }
 

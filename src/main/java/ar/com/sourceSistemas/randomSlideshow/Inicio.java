@@ -11,6 +11,9 @@ import ar.com.sourceSistemas.views.SlideView;
 import ar.com.sourceSistemas.views.TimeAndRandomView;
 
 public class 	Inicio {
+
+
+  public boolean stop = false;
     private SlideView slideView ;
     private int counter =0;
     Timer tm;
@@ -47,6 +50,8 @@ public class 	Inicio {
 
           public void actionPerformed(ActionEvent e) {
               try {
+		System.out.println("stop is: "+stop);
+		if(!stop)
                   slideView.setImageSize(x);
               } catch (IOException ex) {
                   ex.printStackTrace();
@@ -71,7 +76,8 @@ public class 	Inicio {
 	  {
 	    counter++;
 	    try{
-	      slideView.setImageSize(counter);
+	      if(!stop)
+		slideView.setImageSize(counter);
 	    }catch(IOException ex){
 	      ex.printStackTrace();
 	    }

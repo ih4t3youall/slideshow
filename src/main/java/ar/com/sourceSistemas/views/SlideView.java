@@ -38,6 +38,7 @@ public class SlideView extends JFrame {
     List<Integer> alreadyTaken = new LinkedList<Integer>();
     boolean random;
     public JButton next = new JButton("Next");
+    public JButton stop = new JButton("stop");
     public JButton start = new JButton("start");
     private Inicio inicio;
 
@@ -67,6 +68,7 @@ public class SlideView extends JFrame {
         // Call The Function SetImageSize
         setImageSize(0);
 
+	add(stop);
         add(start);
         add(next);
         add(pic);
@@ -82,6 +84,13 @@ public class SlideView extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 startSlideshow();
+            }
+        });
+        stop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                inicio.stop = !inicio.stop;
+		System.out.println("stop changed to: "+inicio.stop);
             }
         });
     }

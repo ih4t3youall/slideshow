@@ -3,23 +3,23 @@ package ar.com.sourceSistemas.views;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+
+import ar.com.sourceSistemas.randomSlideshow.Inicio;
 
 public class TimeAndRandomView extends JFrame{
 
     private SlideView slideView;
+    private Inicio inicio;
 
     public void start(){
 
         JPanel jpanel = new JPanel();
-
         jpanel.setLayout(new FlowLayout());
 
         final JButton aceptar = new JButton("aceptar");
@@ -36,9 +36,6 @@ public class TimeAndRandomView extends JFrame{
         setLocation(200,200);
         setVisible(true);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-
         aceptar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -47,24 +44,17 @@ public class TimeAndRandomView extends JFrame{
                 slideView.random = checkBox.isSelected();
                 try {
                     slideView.init();
+                    setVisible(false);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
     }
 
-    public TimeAndRandomView(SlideView slideView) {
-
-
+    public TimeAndRandomView(SlideView slideView){
         this.slideView =  slideView;
         start();
-
-
-
-
-
     }
 }

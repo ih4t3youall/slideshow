@@ -2,6 +2,7 @@ package ar.com.sourceSistemas.views;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+
+import ar.com.sourceSistemas.randomSlideshow.Inicio;
 import javax.swing.*;
 
 public class SlideView extends JFrame {
@@ -34,28 +37,21 @@ public class SlideView extends JFrame {
     int picheight = 0;
     List<Integer> alreadyTaken = new LinkedList<Integer>();
     boolean random;
+    public JButton next = new JButton("Next");
+    public JButton start = new JButton("start");
+    private Inicio inicio;
 
-    public SlideView() {
+    public SlideView(Inicio inicio) {
         super("Java SlideShow");
-        JFileChooser jfc;
-        if (new File(System.getProperty("user.home") + "/Dropbox/Public").exists()) {
-            jfc = new JFileChooser(System.getProperty("user.home") + "/Dropbox/Public");
-        } else {
-            jfc = new JFileChooser();
-        }
-        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        this.inicio = inicio;
+    }
 
-        jfc.showOpenDialog(null);
-        File file = jfc.getSelectedFile();
-        list = file.listFiles();
-        //String timer = JOptionPane.showInputDialog(null, "cuanto tiempo duran ? ","4500");
-        new TimeAndRandomView(this);
-//        time = Integer.valueOf(timer);
-//        try {
-//            init();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    public int getTime(){
+      return time;
+    }
+
+   public void setList(File[] list){
+      this.list = list;
     }
 
     public void init() throws IOException {
@@ -65,54 +61,50 @@ public class SlideView extends JFrame {
         height = Integer.valueOf((int) screenSize.getHeight());
         System.out.println("window height: " + height);
         System.out.println("window width: " + width);
-        pic.setBounds(40, 30, width, height);
+        pic.setBounds(0, 0, width, height);
+        setLayout(new FlowLayout());
 
         // Call The Function SetImageSize
-        SetImageSize();
+        setImageSize(0);
 
-        // set a timer
-        tm = new Timer(time, new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    SetImageSize();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                x += 1;
-                if (x >= list.length)
-                    x = 0;
-            }
-        });
+        add(start);
+        add(next);
         add(pic);
-        tm.start();
-        setLayout(null);
+
         setSize(width , height );
         repaint();
         getContentPane().setBackground(Color.decode("#bdb67b"));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
         setVisible(true);
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                startSlideshow();
+            }
+        });
+    }
 
+    public void startSlideshow(){
+        this.inicio.slideshowTime();
     }
 
     // create a function to resize the image
-    public void SetImageSize() throws IOException {
-        int randomNumber =0;
-        if (random) {
-            randomNumber = random(list.length);
-        }else {
-            randomNumber = nonRandom(list.length);
-            System.out.println("cont: "+cont);
-            System.out.println("list.get: "+list[cont]);
-        }
-        BufferedImage buffImg = ImageIO.read(new File(list[randomNumber].toString()));
+    public void setImageSize(int index) throws IOException {
+        
+        BufferedImage buffImg = ImageIO.read(new File(list[index].toString()));
         Integer[] arr = reduceImage(buffImg);
         picwidth = arr[1];
         picheight = arr[0];
         Image newImg = buffImg.getScaledInstance(picwidth, picheight, Image.SCALE_SMOOTH);
         ImageIcon newImc = new ImageIcon(newImg);
         pic.setIcon(newImc);
+    }
+
+
+    public void removeall(){
+        pic.removeAll();
     }
 
     public Integer[] reduceImage(BufferedImage image) {

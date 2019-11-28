@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.*;
+import java.util.Arrays;
 
 import ar.com.sourceSistemas.views.SlideView;
 import ar.com.sourceSistemas.views.TimeAndRandomView;
+import javax.swing.*;
 
 public class 	Inicio {
 
@@ -17,7 +17,7 @@ public class 	Inicio {
     private SlideView slideView ;
     private int counter =0;
     Timer tm;
-    int x = 0;
+    int x = 1;
     private File[] list;
     public Inicio() {
         slideView = new SlideView(this);
@@ -33,6 +33,7 @@ public class 	Inicio {
     jfc.showOpenDialog(null);
     File file = jfc.getSelectedFile();
     list = file.listFiles();
+    Arrays.sort(list);
     slideView.setList(list);
     new TimeAndRandomView(slideView);
 
@@ -74,10 +75,13 @@ public class 	Inicio {
         {
 	  public void actionPerformed(ActionEvent e)
 	  {
-	    counter++;
+	    x++;
+
+	    if (x == list.length)
+	      x=0;
 	    try{
 	      if(!stop)
-		slideView.setImageSize(counter);
+		slideView.setImageSize(x);
 	    }catch(IOException ex){
 	      ex.printStackTrace();
 	    }
@@ -85,5 +89,22 @@ public class 	Inicio {
 	  }
 	});
 
-  }
+	slideView.previous.addActionListener(new ActionListener()
+	    {
+	      public void actionPerformed(ActionEvent e)
+	      {
+		x--;
+
+		if (x < 0)
+		  x=0;
+		try{
+		  if(!stop)
+		    slideView.setImageSize(x);
+		}catch(IOException ex){
+		  ex.printStackTrace();
+		}
+
+	      }
+	    });
+    }
 }

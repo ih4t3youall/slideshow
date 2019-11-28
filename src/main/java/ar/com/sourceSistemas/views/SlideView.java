@@ -38,6 +38,7 @@ public class SlideView extends JFrame {
     List<Integer> alreadyTaken = new LinkedList<Integer>();
     boolean random;
     public JButton next = new JButton("Next");
+    public JButton previous = new JButton("Previous");
     public JButton stop = new JButton("stop");
     public JButton start = new JButton("start");
     private Inicio inicio;
@@ -67,10 +68,11 @@ public class SlideView extends JFrame {
 
         // Call The Function SetImageSize
         setImageSize(0);
-
+        Arrays.stream(list).forEach(System.out::println);
 	add(stop);
         add(start);
         add(next);
+	add(previous);
         add(pic);
 
         setSize(width , height );

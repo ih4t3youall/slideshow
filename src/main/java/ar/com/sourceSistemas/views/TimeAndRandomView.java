@@ -41,7 +41,7 @@ public class TimeAndRandomView extends JFrame{
             public void actionPerformed(ActionEvent actionEvent) {
 
                 slideView.time = Integer.valueOf(textField.getText());
-                slideView.random = checkBox.isSelected();
+                inicio.random = checkBox.isSelected();
                 try {
                     slideView.init();
                     setVisible(false);
@@ -53,8 +53,9 @@ public class TimeAndRandomView extends JFrame{
 
     }
 
-    public TimeAndRandomView(SlideView slideView){
+    public TimeAndRandomView(SlideView slideView,Inicio inicio){
         this.slideView =  slideView;
+        this.inicio = inicio;
         start();
     }
 }
